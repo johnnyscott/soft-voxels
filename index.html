@@ -5,7 +5,7 @@
 <title>Soft Voxels</title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 <style>
-html,body{ overflow:hidden;}
+html,body{ overflow:hidden;background:black;}
 canvas {
 /* Anchor to the upper left */
 position: absolute;
@@ -34,6 +34,7 @@ left: 0;
 
     void main(void) {
         vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+     if ( textureColor.a < 0.1 ) discard ;
         gl_FragColor = textureColor;// * vec4(uColor, 1.0);
     }
 </script>
@@ -392,14 +393,15 @@ left: 0;
 
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        gl.clear(gl.COLOR_BUFFER_BIT );
+       gl.clear(gl.COLOR_BUFFER_BIT );
 
         mat4.perspective(fFOV, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
         
+       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.enable(gl.BLEND);
       
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         gl.enable (gl.DEPTH_TEST);
-        gl.enable(gl.BLEND);
+     
         mat4.identity(mvMatrix);
         mat4.translate(mvMatrix, [pan, 0.0, zoom]);
         mat4.rotate(mvMatrix, degToRad(oMouse.angleX), [0.0, -1.0, 0.0]);
