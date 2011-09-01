@@ -30,7 +30,6 @@ background:black;
 
     uniform sampler2D uSampler;
 
-    uniform vec3 uColor;
 
     void main(void) {
         vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
@@ -135,7 +134,7 @@ background:black;
         shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
         shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
         shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
-        shaderProgram.colorUniform = gl.getUniformLocation(shaderProgram, "uColor");
+     
     }
 
 
@@ -309,8 +308,6 @@ background:black;
         this.dist = startingDistance;
         this.rotationSpeed = rotationSpeed;
 
-        // Set the colors to a starting value.
-        this.randomiseColors();
     }
 
     Star.prototype.draw = function (tilt, spin, twinkle) {
@@ -321,7 +318,6 @@ background:black;
         mat4.translate(mvMatrix, [this.x, this.y, this.z]);
 
         // Draw the star in its main color
-        gl.uniform3f(shaderProgram.colorUniform, this.r, this.g, this.b);
         drawStar()
 
         mvPopMatrix();
@@ -337,25 +333,9 @@ background:black;
         this.dist -= 0.00 * effectiveFPMS * elapsedTime;
         if (this.dist < 0.0) {
             this.dist += 5.0;
-            this.randomiseColors();
+          //  this.randomiseColors();
         }
 
-    };
-
-
-    Star.prototype.randomiseColors = function () {
-        // Give the star a random color for normal
-        // circumstances...
-        this.r = Math.random();
-        this.g = Math.random();
-        this.b = Math.random();
-
-        // When the star is twinkling, we draw it twice, once
-        // in the color below (not spinning) and then once in the
-        // main color defined above.
-        this.twinkleR = Math.random();
-        this.twinkleG = Math.random();
-        this.twinkleB = Math.random();
     };
 
 
@@ -470,7 +450,7 @@ background:black;
          oMouse.angleY -= 180/2;
          oMouse.angleX -= 180/2;
          
-         console.log(oMouse.angleY);
+         //console.log(oMouse.angleY);
         }
         );
     }
