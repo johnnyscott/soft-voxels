@@ -13,7 +13,7 @@ top: 0;
 left: 0;
 background:black;
 /* Scale out 2X from the corner */
--webkit-transform: scale(1.64);//, 2.0, 1.0);
+-webkit-transform: scale(2.64);//, 2.0, 1.0);
 -webkit-transform-origin: 0 0 0;
 }
 </style>
@@ -33,7 +33,7 @@ background:black;
 
     void main(void) {
         vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-     if ( textureColor.a < 0.2 ) discard ;
+     if ( textureColor.a < 0.4 ) discard ;
         gl_FragColor = textureColor;// * vec4(uColor, 1.0);
     }
 </script>
@@ -342,18 +342,22 @@ background:black;
 
     var stars = [];
 
+    // random half negative
+    function rndHN(iRange){
+        return (Math.random() * iRange) - iRange/2;
+    }
     
     // star constructor:   function Star(startingDistance, rotationSpeed) {
     function initWorldObjects() {
-        var numStars = 122;
+        var numStars = 2000;
 
         for (var i=0; i < numStars; i++) {
             stars.push(
                 new Star(   (i / numStars) * 5.0 
                             ,i / numStars
-                            ,[ Math.random()*4
-                              ,Math.random()*4
-                              ,Math.random()*4      ] )  );
+                            ,[ rndHN(43)
+                              ,rndHN(.5) - 3
+                              ,rndHN(43)    ] )  );
         }
     }
 
@@ -445,11 +449,17 @@ background:black;
          var x = oMouse.x;
          var y = oMouse.y;
          
+         
+         var oldAX = oMouse.angleX;
+         var oldAY = oMouse.angleY;
+         
          oMouse.angleX = (x/iW) * 180;
          oMouse.angleY = (y/iH) * 180;
          oMouse.angleY -= 180/2;
          oMouse.angleX -= 180/2;
          
+         oMouse.angleX = (oldAX + oMouse.angleX)/2;
+         oMouse.angleY = (oldAY + oMouse.angleY)/2;
          //console.log(oMouse.angleY);
         }
         );
@@ -463,7 +473,7 @@ background:black;
 
 <body onload="webGLStart();">
    
-    <canvas id="lesson09-canvas" style="border: none;" width="500" height="500"></canvas>
+    <canvas id="lesson09-canvas" style="border: none;" width="400" height="226"></canvas>
 
     
     
