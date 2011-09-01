@@ -57,7 +57,8 @@ left: 0;
 <script type="text/javascript">
 
     var gl;
-
+    var fFOV = 45.0 // field of view
+    
     function initGL(canvas) {
         try {
             gl = canvas.getContext("experimental-webgl");
@@ -393,14 +394,15 @@ left: 0;
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+        mat4.perspective(fFOV, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+      gl.blendFunc(gl.GL_ONE, gl.ONE);
         gl.enable(gl.BLEND);
 
         mat4.identity(mvMatrix);
         mat4.translate(mvMatrix, [pan, 0.0, zoom]);
-        mat4.rotate(mvMatrix, degToRad(tilt), [2.0000000000000000000000000000000000000000000000004, 0.0, 0.0]);
+        mat4.rotate(mvMatrix, degToRad(oMouse.angleX), [0.0, -1.0, 0.0]);
+        mat4.rotate(mvMatrix, degToRad(oMouse.angleY), [-1.0, 0.0, 0.0]);
 
         var twinkle = document.getElementById("twinkle").checked;
         for (var i in stars) {
@@ -462,6 +464,7 @@ left: 0;
         $(document).mousemove( 
         function(e)
         {
+        
          oMouse.x = e.pageX;
          oMouse.y = e.pageY;
          
@@ -469,11 +472,12 @@ left: 0;
          var iH = $(window).height();
          var iW = $(window).width();
          var x = oMouse.x;
-         var y = oMouse.y;
+         var y = oMouse.y;s
          
-         oMouse.angleX = 3;
-         oMouse.angleY = 3;
+         oMouse.angleX = (x/iW) * 360;
+         oMouse.angleY = (y/iH) * 360;
          
+         console.log(oMouse.angleX);
         }
         );
     }
