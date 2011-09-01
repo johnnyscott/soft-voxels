@@ -13,7 +13,7 @@ top: 0;
 left: 0;
 background:black;
 /* Scale out 2X from the corner */
--webkit-transform: scale(2.64);//, 2.0, 1.0);
+-webkit-transform: scale(1.94);//, 2.0, 1.0);
 -webkit-transform-origin: 0 0 0;
 }
 </style>
@@ -356,7 +356,7 @@ background:black;
                 new Star(   (i / numStars) * 5.0 
                             ,i / numStars
                             ,[ rndHN(43)
-                              ,rndHN(.5) - 3
+                              ,rndHN(1.1) - 3
                               ,rndHN(43)    ] )  );
         }
     }
@@ -473,7 +473,7 @@ background:black;
 
 <body onload="webGLStart();">
    
-    <canvas id="lesson09-canvas" style="border: none;" width="400" height="226"></canvas>
+    <canvas id="lesson09-canvas" style="border: none;" width="500" height="281"></canvas>
 
     
     
