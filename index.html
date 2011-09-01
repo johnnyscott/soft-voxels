@@ -20,7 +20,7 @@ left: 0;
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
 <script type="text/javascript" src="webgl-utils.js"></script>
-
+/* star shader
 <script id="shader-fs" type="x-shader/x-fragment">
     #ifdef GL_ES
     precision highp float;
@@ -34,7 +34,7 @@ left: 0;
 
     void main(void) {
         vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-        gl_FragColor = textureColor * vec4(uColor, 1.0);
+        gl_FragColor = textureColor;// * vec4(uColor, 1.0);
     }
 </script>
 
@@ -158,7 +158,7 @@ left: 0;
             handleLoadedTexture(starTexture)
         }
 
-        starTexture.image.src = "star.gif";
+        starTexture.image.src = "star.jpg";
     }
 
 
@@ -330,7 +330,7 @@ left: 0;
         }
 
         // All stars spin around the Z axis at the same rate
-        mat4.rotate(mvMatrix, degToRad(spin), [0.0, 0.0, 1.0]);
+    //    mat4.rotate(mvMatrix, degToRad(spin), [0.0, 0.0, 1.0]);
 
         // Draw the star in its main color
         gl.uniform3f(shaderProgram.colorUniform, this.r, this.g, this.b);
@@ -377,7 +377,7 @@ left: 0;
     
     // star constructor:   function Star(startingDistance, rotationSpeed) {
     function initWorldObjects() {
-        var numStars = 322;
+        var numStars = 122;
 
         for (var i=0; i < numStars; i++) {
             stars.push(
@@ -392,11 +392,10 @@ left: 0;
 
     function drawScene() {
         gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT );
 
         mat4.perspective(fFOV, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
-
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+        gl.enable (gl.DEPTH_TEST);
         gl.enable(gl.BLEND);
 
         mat4.identity(mvMatrix);
@@ -472,12 +471,10 @@ left: 0;
          var iH = $(window).height();
          var iW = $(window).width();
          var x = oMouse.x;
-         var y = oMouse.y;s
+         var y = oMouse.y;
          
          oMouse.angleX = (x/iW) * 360;
          oMouse.angleY = (y/iH) * 360;
-         
-         console.log(oMouse.angleX);
         }
         );
     }
