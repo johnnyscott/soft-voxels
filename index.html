@@ -158,7 +158,7 @@ left: 0;
             handleLoadedTexture(starTexture)
         }
 
-        starTexture.image.src = "star.jpg";
+        starTexture.image.src = "star.png";
     }
 
 
@@ -395,9 +395,11 @@ left: 0;
         gl.clear(gl.COLOR_BUFFER_BIT );
 
         mat4.perspective(fFOV, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+        
+      
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         gl.enable (gl.DEPTH_TEST);
         gl.enable(gl.BLEND);
-
         mat4.identity(mvMatrix);
         mat4.translate(mvMatrix, [pan, 0.0, zoom]);
         mat4.rotate(mvMatrix, degToRad(oMouse.angleX), [0.0, -1.0, 0.0]);
@@ -486,10 +488,27 @@ left: 0;
 
 
 <body onload="webGLStart();">
-    <a href="http://learningwebgl.com/blog/?p=1008">&lt;&lt; Back to Lesson 9</a><br />
-
+   
     <canvas id="lesson09-canvas" style="border: none;" width="500" height="500"></canvas>
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div style="padding:10px 20px 10px 20px;position:absolute;top:0px;right:0px;z-index:2200000;background:#b880de;color:white;font-family:arial;">
+    
+    WASD plus mouse... figuring it out :D
+    </div>
+    <div style="visibility:hidden:position:absolute;left:-400px;">
     <br/>
     <input type="checkbox" id="twinkle" /> Twinkle<br/>
     (Use up/down cursor keys to rotate, and <code>Page Up</code>/<code>Page Down</code> to zoom out/in)
@@ -497,6 +516,8 @@ left: 0;
     <br/>
     <br/>
     <a href="http://learningwebgl.com/blog/?p=1008">&lt;&lt; Back to Lesson 9</a>
+    
+    </div>
 </body>
 
 </html>
