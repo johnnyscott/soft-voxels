@@ -11,7 +11,7 @@ canvas {
 position: absolute;
 top: 0;
 left: 0;
-
+background:black;
 /* Scale out 2X from the corner */
 -webkit-transform: scale(1.64);//, 2.0, 1.0);
 -webkit-transform-origin: 0 0 0;
@@ -34,7 +34,7 @@ left: 0;
 
     void main(void) {
         vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-     if ( textureColor.a < 0.1 ) discard ;
+     if ( textureColor.a < 0.2 ) discard ;
         gl_FragColor = textureColor;// * vec4(uColor, 1.0);
     }
 </script>
@@ -305,7 +305,7 @@ left: 0;
         this.y = position[1];
         this.z = position[2];
         
-        this.angle = 3;
+        this.angle = 0;
         this.dist = startingDistance;
         this.rotationSpeed = rotationSpeed;
 
@@ -317,21 +317,8 @@ left: 0;
         mvPushMatrix();
 
         // Move to the star's position
-      mat4.rotate(mvMatrix, degToRad(this.angle), [0.0, 1.0, 0.0]);
-      mat4.translate(mvMatrix, [this.x, this.x, this.z]);
-
-        // Rotate back so that the star is facing the viewer
-       mat4.rotate(mvMatrix, degToRad(-this.angle), [0.0, 1.0, 0.0]);
-        mat4.rotate(mvMatrix, degToRad(-tilt), [1.0, 0.0, 0.0]);
-
-        if (twinkle) {
-            // Draw a non-rotating star in the alternate "twinkling" color
-            gl.uniform3f(shaderProgram.colorUniform, this.twinkleR, this.twinkleG, this.twinkleB);
-            drawStar();
-        }
-
-        // All stars spin around the Z axis at the same rate
-    //    mat4.rotate(mvMatrix, degToRad(spin), [0.0, 0.0, 1.0]);
+  
+        mat4.translate(mvMatrix, [this.x, this.y, this.z]);
 
         // Draw the star in its main color
         gl.uniform3f(shaderProgram.colorUniform, this.r, this.g, this.b);
@@ -403,9 +390,10 @@ left: 0;
         gl.enable (gl.DEPTH_TEST);
      
         mat4.identity(mvMatrix);
+        
+        mat4.rotate(mvMatrix, degToRad(oMouse.angleY), [1.0, 0.0, 0.0]);
+        mat4.rotate(mvMatrix, degToRad(oMouse.angleX), [0.0, 1.0, 0.0]);
         mat4.translate(mvMatrix, [pan, 0.0, zoom]);
-        mat4.rotate(mvMatrix, degToRad(oMouse.angleX), [0.0, -1.0, 0.0]);
-        mat4.rotate(mvMatrix, degToRad(oMouse.angleY), [-1.0, 0.0, 0.0]);
 
         var twinkle = document.getElementById("twinkle").checked;
         for (var i in stars) {
@@ -477,8 +465,12 @@ left: 0;
          var x = oMouse.x;
          var y = oMouse.y;
          
-         oMouse.angleX = (x/iW) * 360;
-         oMouse.angleY = (y/iH) * 360;
+         oMouse.angleX = (x/iW) * 180;
+         oMouse.angleY = (y/iH) * 180;
+         oMouse.angleY -= 180/2;
+         oMouse.angleX -= 180/2;
+         
+         console.log(oMouse.angleY);
         }
         );
     }
