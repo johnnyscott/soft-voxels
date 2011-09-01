@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>Learning WebGL &mdash; lesson 9</title>
+<title>Soft Voxels</title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 <style>
 html,body{ overflow:hidden;}
@@ -456,24 +456,27 @@ left: 0;
     var oMouse = {x:0,y:0,angleY:0.0,angleX:0.0}
     
     $(document).ready(
-    
+    function()
+    {
         // save mouse position
-        $(document).mousemove(function(e)
-            {
-             oMouse.x = e.pageX;
-             oMouse.y = e.pageY;
-             
-             // calculate angle as percentage of window height/width
-             var iH = $(window).height();
-             var iW = $(window).width();
-             var x = oMouse.x;
-             var y = oMouse.y;
-             
-             oMouse.angleX = iW/;
-             oMouse.angleY = ;
-             
-            }
+        $(document).mousemove( 
+        function(e)
+        {
+         oMouse.x = e.pageX;
+         oMouse.y = e.pageY;
+         
+         // calculate angle as percentage of window height/width
+         var iH = $(window).height();
+         var iW = $(window).width();
+         var x = oMouse.x;
+         var y = oMouse.y;
+         
+         oMouse.angleX = 3;
+         oMouse.angleY = 3;
+         
+        }
         );
+    }
     );
 </script>
 
