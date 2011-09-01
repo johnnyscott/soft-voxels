@@ -396,7 +396,7 @@ left: 0;
 
         mat4.perspective(fFOV, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
-      gl.blendFunc(gl.GL_ONE, gl.ONE);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
         gl.enable(gl.BLEND);
 
         mat4.identity(mvMatrix);
