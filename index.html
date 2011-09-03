@@ -13,6 +13,37 @@ top: 0;
 left: 0;
 background:black;
 }
+
+.console{
+    position:absolute;
+    z-index:1000;
+    top:0;
+    left:0;
+    background:blue;
+    height:400px;
+    width:33%;
+    opacity:0.6;
+}
+.console span{
+    display:block;
+    position:absolute;
+    top:0px;
+    bottom:32px;
+    left:0;
+    right:0;
+    width:auto;
+    height:auto;
+    background:#586568;
+    
+}
+.console input{
+    position:absolute;
+    bottom:3px;
+    width:auto;
+    left:0;
+    right:0;
+    height:20px;
+}
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 <script type="text/javascript" src="glMatrix-0.9.5.min.js"></script>
@@ -54,16 +85,36 @@ background:black;
 <script type="text/javascript">
 
     var bL = true; // logging on or off?
+    
+    
+
+    var LOOK_ANGLE_RANGE = 540;
+    var KEY_W = 87;
+    var KEY_A = 65;
+    var KEY_S = 83;
+    var KEY_D = 68;
+    
+    var KEY_TILDE        = 192;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     var gl;
     var fFOV = 45.0 // field of view
     
     
-    
+    var consoleLine = 0;
     
 
     var zoom = -15;
-
-    var LOOK_ANGLE_RANGE = 540;
 
     var tilt = 10;
     var spin = 0;
@@ -80,37 +131,104 @@ background:black;
     var friction = .0007;
     
     
+    
+    
+    
+    
     function l(s){ if(bL){console.log(s);}else{}}
     function fit(){ $('canvas').css({width:$(window).width()+'px'});}
 
     
     function handleKeys() {
-        if (currentlyPressedKeys[87]) {//w
+        
+        // RUN FORWARD
+        if (currentlyPressedKeys[KEY_W]) { //w
             // Page Down
             zoom += 0.1;
             runSpeed += runStep;
             
         }
-        
-        if (currentlyPressedKeys[65]) { //a
+        // STRAFE LEFT 
+        if (currentlyPressedKeys[KEY_A]) { //a
             // Up cursor key
             pan += 0.1;
             strafeSpeed +=runStep;
         }
-        if (currentlyPressedKeys[ 83]) { //s
+        // RUN BACKWARDS
+        if (currentlyPressedKeys[KEY_S]) { //s
             // Page Up
             zoom -= 0.1;
             runSpeed -=runStep;
             
         }
-        if (currentlyPressedKeys[68]) { //d
+        // STRAFE RIGHT 
+        if (currentlyPressedKeys[KEY_D]) { //d
             // Down cursor key
             pan -= 0.1;
             strafeSpeed -= runStep;
         }
+        // TOGGLE CONSOLE
+        if (currentlyPressedKeys[KEY_TILDE] ) { // ~ `
+            // Down cursor key
+           toggleConsole();
+        }
+        
         
         
     }
+    
+    
+    
+    var bInConsoleToggle = false;
+    function toggleConsole()
+    {
+        if(bInConsoleToggle){return false;}else{}
+        bInConsoleToggle = true;
+        var o = $('.console');
+        
+        var iTop = 0;
+        if(o.offset().top > -1){
+            iTop = -o.height();
+        }else{}
+        
+        o.animate(
+        {
+            top: iTop + 'px'
+        }
+        ,150
+        ,'swing'
+        ,function(){ bInConsoleToggle = false;}
+        );
+        
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -426,7 +544,7 @@ background:black;
             pZ +=  Math.sin(degToRad(oMouse.angleX)) * strafeSpeed * elapsed; 
             
             
-            l(strafeSpeed);
+            
           
         }
         lastTime = timeNow;
@@ -527,7 +645,7 @@ background:black;
     
     
     
-    
+    <div class="console"><span></span><input type="text" /></div>
     
     
     
@@ -538,7 +656,7 @@ background:black;
     
     <div style="padding:10px 20px 10px 20px;position:absolute;top:0px;right:0px;z-index:2200000;background:#b880de;color:white;font-family:arial;">
     
-    WASD plus mouse... figuring it out :D
+    WASD plus mouse, ~ for console, ? in console for list of commands
     </div>
 </body>
 
