@@ -1,9 +1,15 @@
+ChangeLog
+
+
+
+GOALS
+
 short term GOALS 
 -Camera
-    * horizontal rotation range 360(?)
-    * strafe
-    * html console    
-    * toggle fly mode
+[x] * horizontal rotation range 360(?)
+[x] * strafe
+[ ] * html console    
+    * toggle flysssssssssswwwwww mode
     
 -World
     * lighting
@@ -17,7 +23,7 @@ short term GOALS
     * single geometry push - how to?
     * single texture push - how to?
     
-Architecture
+-Architecture
     * learn about scene graphs
     * change field to a scene graph
    
@@ -27,12 +33,12 @@ Architecture
     
 big picture GOALS
 
-Character
+-Character
     * get dummy character with mario 64 movement controls 
     * add jump to character
     * basic physics in movement (direction vector, friction again)
 
-Camera
+-Camera
     * over the shoulder view 3rd person
     * camera on a track view (accelerate/ decelerate)
         o draw paths, represent them

@@ -53,7 +53,7 @@ background:black;
 
 <script type="text/javascript">
 
-    var bL = false; // logging on or off?
+    var bL = true; // logging on or off?
     var gl;
     var fFOV = 45.0 // field of view
     
@@ -72,7 +72,7 @@ background:black;
     var runSpeed = 0;
     var runStep = 0.001;
     
-    var sidestepSpeed = 0;
+    var strafeSpeed = 0;
     var pX = 0;
     var pY =0;
     var pZ = 0;
@@ -95,7 +95,7 @@ background:black;
         if (currentlyPressedKeys[65]) { //a
             // Up cursor key
             pan += 0.1;
-            sidestepSpeed -= 0.0001;
+            strafeSpeed +=runStep;
         }
         if (currentlyPressedKeys[ 83]) { //s
             // Page Up
@@ -106,7 +106,7 @@ background:black;
         if (currentlyPressedKeys[68]) { //d
             // Down cursor key
             pan -= 0.1;
-            sidestepSpeed += 0.0001;
+            strafeSpeed -= runStep;
         }
         
         
@@ -410,13 +410,23 @@ background:black;
                 if(runSpeed < 0) {runSpeed=0;}else{}
             }
             
-            pX += Math.cos(degToRad(90+oMouse.angleX)) * runSpeed * elapsed; 
+            // apply friction to speeds
+            if( strafeSpeed < 0){ 
+                strafeSpeed += friction;
+                if(strafeSpeed > 0) {strafeSpeed=0;}else{}
+            }else{
+                strafeSpeed -= friction;
+                if(strafeSpeed < 0) {strafeSpeed=0;}else{}
+            }
             
-            
-            
+            pX += Math.cos(degToRad(90+oMouse.angleX)) * runSpeed * elapsed;                                     
             pZ +=  Math.sin(degToRad(90+oMouse.angleX)) * runSpeed * elapsed; 
             
-            l(runSpeed);
+            pX += Math.cos(degToRad(oMouse.angleX)) * strafeSpeed * elapsed;                                     
+            pZ +=  Math.sin(degToRad(oMouse.angleX)) * strafeSpeed * elapsed; 
+            
+            
+            l(strafeSpeed);
           
         }
         lastTime = timeNow;
