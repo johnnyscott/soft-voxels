@@ -17,12 +17,12 @@ background:black;
 .console{
     position:absolute;
     z-index:1000;
-    top:0;
+    top:-400px;
     left:0;
-    background:blue;
+    background:transparent;
     height:400px;
     width:33%;
-    opacity:0.6;
+    opacity:0.90;
 }
 .console span{
     display:block;
@@ -33,8 +33,12 @@ background:black;
     right:0;
     width:auto;
     height:auto;
-    background:#586568;
-    
+    background:#343942;
+    font-family:'Dina', 'Courier New', 'Courier', monospace;
+    font-size:15px;    
+    color:white;
+    overflow-y:scroll;
+    overflow-x:hidden;
 }
 .console input{
     position:absolute;
@@ -85,9 +89,12 @@ background:black;
 <script type="text/javascript">
 
     var bL = true; // logging on or off?
+    var aCommandLog = []; // stack of commands entered
+    var iCommandLogIndex = -1; // position in command stack
+    // console comamnd names
+    var CC_CLEAR = 'clear';
+    var CC_HELP  = '?';
     
-    
-
     var LOOK_ANGLE_RANGE = 540;
     var KEY_W = 87;
     var KEY_A = 65;
@@ -95,8 +102,9 @@ background:black;
     var KEY_D = 68;
     
     var KEY_TILDE        = 192;
-    
-    
+    var KEY_ENTER        = 13;
+    var KEY_UP           = 38;
+    var KEY_DOWN         = 40;
     
     
     
@@ -111,7 +119,7 @@ background:black;
     var fFOV = 45.0 // field of view
     
     
-    var consoleLine = 0;
+    var consoleLineNumber = 0;
     
 
     var zoom = -15;
@@ -132,14 +140,14 @@ background:black;
     
     
     
+
     
-    
-    
-    function l(s){ if(bL){console.log(s);}else{}}
+    // fit canvas to window
     function fit(){ $('canvas').css({width:$(window).width()+'px'});}
 
     
-    function handleKeys() {
+    function handleKeys() 
+    {
         
         // RUN FORWARD
         if (currentlyPressedKeys[KEY_W]) { //w
@@ -179,32 +187,101 @@ background:black;
     
     
     
+   
+    // browser console    
+    function lC(s){ if(bL){console.log(s);}else{}}    
+
+    // engine  console
+    function l(s)
+    {     
+     if(bL){ 
+      consoleLineNumber++; var oConsole =   getConsoleLog();       
+      oConsole.html( 
+       oConsole.html() 
+       + consoleLineNumber 
+       + '&nbsp;&nbsp;&nbsp;&nbsp;'
+       + s 
+       + '<br/>'
+      );  
+      oConsole[0].scrollTop = oConsole[0].scrollHeight;      
+     }else{}      
+    }  
+    function getConsoleLog(){ return getConsole().find('span'); }
+    function getConsole(){ return $('.console');}
+    function getConsoleInput(){ return $('.console input');}
+    function setConsoleInput(sCmd){ getConsoleInput().val(sCmd); }
+    function clearConsoleInput(){ getConsoleInput().val('');}
+    function clearConsole(){ getConsoleLog().html(''); }
     var bInConsoleToggle = false;
     function toggleConsole()
     {
         if(bInConsoleToggle){return false;}else{}
         bInConsoleToggle = true;
-        var o = $('.console');
+		
+        
+        var o = getConsole();
         
         var iTop = 0;
         if(o.offset().top > -1){
             iTop = -o.height();
-        }else{}
-        
+            getConsoleInput().blur();
+        }else{ getConsoleInput().focus(); }
         o.animate(
         {
             top: iTop + 'px'
         }
         ,150
         ,'swing'
-        ,function(){ bInConsoleToggle = false;}
-        );
-        
-        
-        
+        ,function(){ clearConsoleInput(); bInConsoleToggle = false;  }
+        );        
+    }
+    function consoleSaveCommand(sCmd)
+    {
+      aCommandLog.push(sCmd);
+      iCommandLogIndex = aCommandLog.length -1;
     }
     
+    // run console command and log command and output
+    function consoleCommand(sCmd) 
+    {   
+     consoleSaveCommand(sCmd);
+     clearConsoleInput();
+     
+     var sOutput = sCmd; 
+     switch(sCmd){
+     
+      case CC_CLEAR: CC_clear(); return /* special case - don't log clear */; break;
+      
+      case CC_HELP: sOutput += CC_help(); break;
+      
+      default: sOutput += CC_bad();
+     }
+     
+     l(sOutput);
+    }
     
+    function consoleInputHandler(e)
+    {
+      var iKeyCode = e.keyCode;
+      if(iKeyCode == KEY_ENTER){ 
+        getConsole();
+        consoleCommand(e.srcElement.value);
+      }else{}
+      
+      if(iKeyCode == KEY_UP){ // backup command
+        setConsoleInput(aCommandLog[iCommandLogIndex]);
+        iCommandLogIndex--; if(iCommsdddddddddandLogIndex < 0 ){iCommandLogIndex = 0; }else{}
+        
+      }
+      if(iKeyCode == KEY_DOWN){ // next command
+        setConsoleInput(aCommandLog[iCommandLogIndex]);
+        iCommandLogIndex++; if(iCommandLogIndex >aCommandLog.length-1){iCommandLogIndex = aCommandLog.length-1; }else{}
+      }
+    }
+    // actual commands for engine console
+    function CC_bad(){ return '<br/>command doesn\'t exist or command malformed'; }
+    function CC_clear(){ clearConsole(); return ''; }
+    function CC_help(){ return '<br/>Commands<br/>&nbsp;&nbsp;* clear - clear console<br/>&nbsp;&nbsp;* ? - this help message'; }
     
     
     
@@ -579,58 +656,57 @@ background:black;
 
     
     var oMouse = {x:0,y:0,angleY:0.0,angleX:0.0}
+    function mouseMoveHandler(e)
+    {
+     oMouse.x = e.pageX;
+     oMouse.y = e.pageY;
+     
+     // calculate angle as percentage of window height/width
+     var iH = $(window).height();
+     var iW = $(window).width();
+     var x = oMouse.x;
+     var y = oMouse.y;
+     
+     
+     var oldAX = oMouse.angleX;
+     var oldAY = oMouse.angleY;
+     
+     oMouse.angleX = (x/iW) * LOOK_ANGLE_RANGE;
+     oMouse.angleY = (y/iH) * LOOK_ANGLE_RANGE;
+     oMouse.angleY -= LOOK_ANGLE_RANGE/2;
+     oMouse.angleX -= LOOK_ANGLE_RANGE/2;
+     
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     $(document).ready(
     function()
     {
     
+      fit(); $(window).resize( fit ); // fit canvas to window handler
+      $(document).mousemove( mouseMoveHandler ); // mouse move handler
+      getConsoleInput().keyup( consoleInputHandler ); // console command handler
     
-        
-    
-        fit(); // fit canvas to window
-        
-        $(window).resize(function()
-        {
-            fit();
-        });
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        // save mouse position
-        $(document).mousemove( 
-        function(e)
-        {
-        
-         oMouse.x = e.pageX;
-         oMouse.y = e.pageY;
-         
-         // calculate angle as percentage of window height/width
-         var iH = $(window).height();
-         var iW = $(window).width();
-         var x = oMouse.x;
-         var y = oMouse.y;
-         
-         
-         var oldAX = oMouse.angleX;
-         var oldAY = oMouse.angleY;
-         
-         oMouse.angleX = (x/iW) * LOOK_ANGLE_RANGE;
-         oMouse.angleY = (y/iH) * LOOK_ANGLE_RANGE;
-         oMouse.angleY -= LOOK_ANGLE_RANGE/2;
-         oMouse.angleX -= LOOK_ANGLE_RANGE/2;
-         
-        //console.log(oMouse.angleX + ', ' +oMouse.angleY);
-        }
-        );
     }
     );
+    
+    
 </script>
 
 

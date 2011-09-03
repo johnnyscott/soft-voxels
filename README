@@ -8,8 +8,8 @@ short term GOALS
 -Camera
 [x] * horizontal rotation range 360(?)
 [x] * strafe
-[ ] * html console    
-    * toggle flysssssssssswwwwww mode
+[x] * html console    
+    * toggle fly mode via console
     
 -World
     * lighting
