@@ -1,0 +1,25 @@
+short term GOALS 
+-Camera
+    * horizontal rotation range 360(?)
+    * strafe
+    * html console    
+    * toggle fly mode
+    
+-World
+    * lighting
+        o learn shader
+        o find limits on count
+    * skybox
+    * figure out wireframe toggle
+    * try no double sided
+    * find performance limits
+    * find fastest environment (browser, outside of browser?!)
+    * single geometry push - how to?
+    * single texture push - how to?
+    
+Architecture
+    * learn about scene graphs
+    * import a model from max including coords + texture
+    
+    
+    
