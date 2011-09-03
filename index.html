@@ -12,9 +12,6 @@ position: absolute;
 top: 0;
 left: 0;
 background:black;
-/* Scale out 2X from the corner */
--webkit-transform: scale(1.34);//, 2.0, 1.0);
--webkit-transform-origin: 0 0 0;
 }
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
@@ -56,6 +53,7 @@ background:black;
 
 <script type="text/javascript">
 
+    var bL = false; // logging on or off?
     var gl;
     var fFOV = 45.0 // field of view
     
@@ -65,6 +63,7 @@ background:black;
 
     var zoom = -15;
 
+    var LOOK_ANGLE_RANGE = 540;
 
     var tilt = 10;
     var spin = 0;
@@ -81,14 +80,8 @@ background:black;
     var friction = .0007;
     
     
-    
-    
-    
-    
-    
-    
-    
-    
+    function l(s){ if(bL){console.log(s);}else{}}
+    function fit(){ $('canvas').css({width:$(window).width()+'px'});}
 
     
     function handleKeys() {
@@ -423,7 +416,7 @@ background:black;
             
             pZ +=  Math.sin(degToRad(90+oMouse.angleX)) * runSpeed * elapsed; 
             
-            console.log(runSpeed);
+            l(runSpeed);
           
         }
         lastTime = timeNow;
@@ -462,6 +455,26 @@ background:black;
     $(document).ready(
     function()
     {
+    
+    
+        
+    
+        fit(); // fit canvas to window
+        
+        $(window).resize(function()
+        {
+            fit();
+        });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
         // save mouse position
         $(document).mousemove( 
         function(e)
@@ -480,10 +493,10 @@ background:black;
          var oldAX = oMouse.angleX;
          var oldAY = oMouse.angleY;
          
-         oMouse.angleX = (x/iW) * 180;
-         oMouse.angleY = (y/iH) * 180;
-         oMouse.angleY -= 180/2;
-         oMouse.angleX -= 180/2;
+         oMouse.angleX = (x/iW) * LOOK_ANGLE_RANGE;
+         oMouse.angleY = (y/iH) * LOOK_ANGLE_RANGE;
+         oMouse.angleY -= LOOK_ANGLE_RANGE/2;
+         oMouse.angleX -= LOOK_ANGLE_RANGE/2;
          
         //console.log(oMouse.angleX + ', ' +oMouse.angleY);
         }
@@ -498,7 +511,7 @@ background:black;
 
 <body onload="webGLStart();">
    
-    <canvas id="lesson09-canvas" style="border: none;" width="500" height="281"></canvas>
+    <canvas id="lesson09-canvas" style="border: none;" width="733" height="413"></canvas>
 
     
     
