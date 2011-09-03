@@ -11,7 +11,7 @@ short term GOALS
         o find limits on count
     * skybox
     * figure out wireframe toggle
-    * try no double sided
+    * try no double sided (backface cull)
     * find performance limits
     * find fastest environment (browser, outside of browser?!)
     * single geometry push - how to?
@@ -19,7 +19,25 @@ short term GOALS
     
 Architecture
     * learn about scene graphs
-    * import a model from max including coords + texture
+    * change field to a scene graph
+   
+    
+    * (maybe too much to ask right now?) import a model from max including coords + texture
+    
+    
+big picture GOALS
+
+Character
+    * get dummy character with mario 64 movement controls 
+    * add jump to character
+    * basic physics in movement (direction vector, friction again)
+
+Camera
+    * over the shoulder view 3rd person
+    * camera on a track view (accelerate/ decelerate)
+        o draw paths, represent them
+        o stopping points? CLICKS on path?
+    * swap views ->world view (default) -> and back
     
     
     
