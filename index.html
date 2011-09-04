@@ -553,15 +553,15 @@ canvas {
     
     // star constructor:   function Star(startingDistance, rotationSpeed) {
     function initWorldObjects() {
-        var numStars = 2000;
+        var numStars = 2300;
 
         for (var i=0; i < numStars; i++) {
             stars.push(
                 new Star(   (i / numStars) * 5.0 
                             ,i / numStars
-                            ,[ rndHN(43)
+                            ,[ rndHN(103)
                               ,rndHN(1.2) - 3
-                              ,rndHN(43)    ] )  );
+                              ,rndHN(103)    ] )  );
         }
     }
 
@@ -716,7 +716,7 @@ canvas {
 
 <body onload="webGLStart();">
    
-    <canvas id="lesson09-canvas" style="border: none;" width="1024" height="576"></canvas>
+    <canvas id="lesson09-canvas" style="border: none;" width="569" height="320"></canvas>
 
     
     
