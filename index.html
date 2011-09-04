@@ -477,12 +477,15 @@ canvas {
         vertices = [
             -2.0, -2.0,  0.0,
              2.0, -2.0,  0.0,
+            -2.0,  2.0,  0.0, // tri 1
+            
             -2.0,  2.0,  0.0,
-             2.0,  2.0,  0.0
+             2.0, -2.0,  0.0,             
+             2.0,  2.0,  0.0 // tri 2
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW); // actually allocates stoe and pushes data up
         starVertexPositionBuffer.itemSize = 3;
-        starVertexPositionBuffer.numItems = 4;
+        starVertexPositionBuffer.numItems = 6;
 
         starVertexTextureCoordBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, starVertexTextureCoordBuffer);
@@ -490,11 +493,15 @@ canvas {
             0.0, 0.0,
             1.0, 0.0,
             0.0, 1.0,
+            
+            
+            0.0, 1.0,
+            1.0, 0.0,
             1.0, 1.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
         starVertexTextureCoordBuffer.itemSize = 2;
-        starVertexTextureCoordBuffer.numItems = 4;
+        starVertexTextureCoordBuffer.numItems = 6;
     }
 
 
@@ -510,7 +517,7 @@ canvas {
         gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, starVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
         setMatrixUniforms();
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, starVertexPositionBuffer.numItems);
+        gl.drawArrays(gl.TRIANGLES, 0, starVertexPositionBuffer.numItems);
     }
 
 
