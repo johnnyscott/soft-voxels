@@ -320,7 +320,7 @@ canvas {
         } catch (e) {
         }
         if (!gl) {
-            alert("Could not initialise WebGL, sorry :-(");
+            alert("Could not initialise WebGL: try get.webgl.org");
         }
     }
 
@@ -464,10 +464,10 @@ canvas {
         starVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, starVertexPositionBuffer);
         vertices = [
-            -1.0, -1.0,  0.0,
-             1.0, -1.0,  0.0,
-            -1.0,  1.0,  0.0,
-             1.0,  1.0,  0.0
+            -2.0, -2.0,  0.0,
+             2.0, -2.0,  0.0,
+            -2.0,  2.0,  0.0,
+             2.0,  2.0,  0.0
         ];
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         starVertexPositionBuffer.itemSize = 3;
@@ -553,7 +553,7 @@ canvas {
     
     // star constructor:   function Star(startingDistance, rotationSpeed) {
     function initWorldObjects() {
-        var numStars = 2300;
+        var numStars = 1300;
 
         for (var i=0; i < numStars; i++) {
             stars.push(
@@ -573,6 +573,8 @@ canvas {
         mat4.perspective(fFOV, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
         
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+        
         gl.enable(gl.BLEND);
       
         gl.enable (gl.DEPTH_TEST);
@@ -732,10 +734,7 @@ canvas {
     
     
     
-    <div style="padding:10px 20px 10px 20px;position:absolute;top:0px;right:0px;z-index:2200000;background:#b880de;color:white;font-family:arial;">
     
-    WASD plus mouse, ~ for console, ? in console for list of commands
-    </div>
 </body>
 
 </html>
