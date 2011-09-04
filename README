@@ -1,5 +1,5 @@
 ChangeLog
-
+ - see git pushes I'm lazy
 
 
 GOALS
@@ -16,12 +16,21 @@ short term GOALS
       o learn shader
       o find limits on count
   * skybox
-  * figure out wireframe toggle
-  * try no double sided (backface cull)
-  * find performance limits
-  * find fastest environment (browser, outside of browser?!)
+  
+  
+  [x] figure out wireframe toggle
+  [x] try no double sided (backface cull) - doesn't work since these aren't facing
+  [x] find performance limits
+  [x] find fastest environment (browser, outside of browser?!)
+  VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
   * single geometry push - how to?
   * single texture push - how to?
+  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  SUPER IMPORTANT CHANGE SO YOU HAVE ONE ARRAY PER TEXTURE
+    
+    
+    
+    
     
 -Architecture
 [x] * learn about scene graphs

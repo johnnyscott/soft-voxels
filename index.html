@@ -96,6 +96,7 @@ canvas {
     var CC_HELP  = '?';
     
     var LOOK_ANGLE_RANGE = 540;
+    var VIEW_VOLUME_SIZE = 1000;
     var KEY_W = 87;
     var KEY_A = 65;
     var KEY_S = 83;
@@ -313,15 +314,25 @@ canvas {
     
     
     function initGL(canvas) {
-        try {
-            gl = canvas.getContext("experimental-webgl");
-            gl.viewportWidth = canvas.width;
-            gl.viewportHeight = canvas.height;
-        } catch (e) {
-        }
-        if (!gl) {
-            alert("Could not initialise WebGL: try get.webgl.org");
-        }
+      try {
+        gl = canvas.getContext("experimental-webgl");
+        gl.viewportWidth = canvas.width;
+        gl.viewportHeight = canvas.height;
+        
+       // perspective
+        mat4.perspective(fFOV, gl.viewportWidth / gl.viewportHeight, 0.1, VIEW_VOLUME_SIZE, pMatrix);
+          
+       // when we want transparency we can do the following:
+       //   gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+       //   gl.enable(gl.BLEND);
+    
+       // we moved this so we don't do it every frame 
+          gl.enable (gl.DEPTH_TEST);
+      } catch (e) {}
+      
+      if (!gl) {
+          alert("Could not initialise WebGL: try get.webgl.org");
+      }
     }
 
 
@@ -378,14 +389,14 @@ canvas {
 
         gl.useProgram(shaderProgram);
 
-        shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+        shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition"); // gets an integer, on inspection this is 0
         gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
 
-        shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
+        shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord"); // gets an integer, on inspection this is 1
         gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
 
-        shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-        shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+        shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix"); // projection matrix -> clipping and field of view, perspective
+        shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix"); // modelview matrix -> puts camera in scene
         shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
      
     }
@@ -462,14 +473,14 @@ canvas {
 
     function initBuffers() {
         starVertexPositionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, starVertexPositionBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, starVertexPositionBuffer); // gives us a pointer into a store
         vertices = [
             -2.0, -2.0,  0.0,
              2.0, -2.0,  0.0,
             -2.0,  2.0,  0.0,
              2.0,  2.0,  0.0
         ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW); // actually allocates stoe and pushes data up
         starVertexPositionBuffer.itemSize = 3;
         starVertexPositionBuffer.numItems = 4;
 
@@ -488,7 +499,7 @@ canvas {
 
 
     function drawStar() {
-        gl.activeTexture(gl.TEXTURE0);
+     //   gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, starTexture);
         gl.uniform1i(shaderProgram.samplerUniform, 0);
 
@@ -530,15 +541,7 @@ canvas {
 
     var effectiveFPMS = 60 / 1000;
     Star.prototype.animate = function (elapsedTime) {
-        this.angle += 0;//this.rotationSpeed * effectiveFPMS * elapsedTime;
-
-        // Decrease the distance, resetting the star to the outside of
-        // the spiral if it's at the center.
-        this.dist -= 0.00 * effectiveFPMS * elapsedTime;
-        if (this.dist < 0.0) {
-            this.dist += 5.0;
-          //  this.randomiseColors();
-        }
+  
 
     };
 
@@ -553,7 +556,7 @@ canvas {
     
     // star constructor:   function Star(startingDistance, rotationSpeed) {
     function initWorldObjects() {
-        var numStars = 1300;
+        var numStars = 1100;
 
         for (var i=0; i < numStars; i++) {
             stars.push(
@@ -567,17 +570,15 @@ canvas {
 
 
     function drawScene() {
-        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        // is this needed? I commented it out and behavior is the same ??
+        //gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        
         gl.clear(gl.COLOR_BUFFER_BIT );
 
-        mat4.perspective(fFOV, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+        // THIS IS DONE IN INIT NOW since it need only be done once
+        //    mat4.perspective(fFOV, gl.viewportWidth / gl.viewportHeight, 0.1, VIEW_VOLUME_SIZE, pMatrix);
         
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-        
-        gl.enable(gl.BLEND);
       
-        gl.enable (gl.DEPTH_TEST);
      
         mat4.identity(mvMatrix);
         
@@ -646,9 +647,10 @@ canvas {
         var canvas = document.getElementById("lesson09-canvas");
         initGL(canvas);
         initShaders();
+        initWorldObjects();
         initBuffers();
         initTexture();
-        initWorldObjects();
+        
 
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
