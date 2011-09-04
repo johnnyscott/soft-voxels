@@ -5,13 +5,13 @@
 <title>Soft Voxels</title>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 <style>
-html,body{ overflow:hidden;background:black;}
+html,body{ overflow:hidden;background:black; cursor:text;}
+
 canvas {
-/* Anchor to the upper left */
-position: absolute;
-top: 0;
-left: 0;
-background:black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background:black;
 }
 
 .console{
@@ -396,8 +396,9 @@ background:black;
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+        gl.generateMipmap(gl.TEXTURE_2D);
+        
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
@@ -559,7 +560,7 @@ background:black;
                 new Star(   (i / numStars) * 5.0 
                             ,i / numStars
                             ,[ rndHN(43)
-                              ,rndHN(1.1) - 3
+                              ,rndHN(1.2) - 3
                               ,rndHN(43)    ] )  );
         }
     }
@@ -715,7 +716,7 @@ background:black;
 
 <body onload="webGLStart();">
    
-    <canvas id="lesson09-canvas" style="border: none;" width="733" height="413"></canvas>
+    <canvas id="lesson09-canvas" style="border: none;" width="1024" height="576"></canvas>
 
     
     
