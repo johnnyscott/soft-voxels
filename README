@@ -1,13 +1,43 @@
 ChangeLog
- - see git pushes I'm lazy
+
+9/5/2011
+  * uses a scene graph data structure I made
+  * added support for single call to drawarrays per frame giving 100-1000x performance boost
+  * added a flying camera and WASD control for run/strafe plus mouse look control
+  IMMEDIATE TO DOS
+  [ ] IMPORT GEOMETRY get a textured ground plane from blender
+      [ ] add simple loading/status message
+      [ ] implement sceneGraph->rebuildBuffers as a web worker
+      [ ] install gimp/blender 
+      [ ] create a fancy textured ground plane in blender, bake some lighting into the texture
+      [ ] setup/test this json export script->https://github.com/alteredq/three.js/blob/master/utils/exporters/convert_obj_three.py      
+      [ ] load the model, hook up status
+      [ ] create a new obj_type obj_mesh for arbitrary geometry
+      [ ] get the ground plane to render, skip the bushes step
+      [ ] basically no facets! figure out smoothing groups / update shader for smooth shading, 
+      
+      
+ 
+
+
 
  
- MUSIC
-CCR
-
-
-
-GOALS
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+OLD GOALS
 
 short term GOALS 
 -Camera
@@ -27,21 +57,15 @@ short term GOALS
   [x] try no double sided (backface cull) - doesn't work since these aren't facing
   [x] find performance limits
   [x] find fastest environment (browser, outside of browser?!)
-  VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
-  * single geometry push - how to?
-  * single texture push - how to?
-  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  SUPER IMPORTANT CHANGE SO YOU HAVE ONE ARRAY PER TEXTURE
-    
-    
-    
-    
+  [x]single geometry push - how to?
+  [x]single texture push - how to?
+  
     
 -Architecture
 [x] * learn about scene graphs
-  * change field to a scene graph  
-  * (maybe too much to ask right now?) import a model from max including coords + texture
-    
+[x] * change field to a scene graph  
+    * import a model from max including coords + texture
+   
     
 big picture GOALS
 
