@@ -561,8 +561,31 @@ canvas {
         return (Math.random() * iRange) - iRange/2;
     }
     
+    var scene = null;
     // star constructor:   function Star(startingDistance, rotationSpeed) {
     function initWorldObjects() {
+        scene = new sceneGraph();
+        
+       
+        var numStars = 1100;
+        console.log(new Date().getTime());
+        for (var i=0; i < numStars; i++) {
+          scene.addChild(
+            new sceneNode(
+              new obj_quad({ position:
+                              [rndHN(103)
+                              ,rndHN(1.2) - 3
+                              ,rndHN(103)]
+                            })
+            )
+            , 0);
+        
+        }
+        scene.rebuildBuffers();
+        
+        
+        
+        return;
         var numStars = 1100;
 
         for (var i=0; i < numStars; i++) {
@@ -655,6 +678,7 @@ canvas {
         initGL(canvas);
         initShaders();
         initWorldObjects();
+        return ;
         initBuffers();
         initTexture();
         
