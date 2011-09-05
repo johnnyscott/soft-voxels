@@ -523,9 +523,9 @@ canvas {
 
 
     function Star(startingDistance, rotationSpeed, position) {
-        this.x = position[0];
-        this.y = position[1];
-        this.z = position[2];
+        this['x'] = position[0];
+        this['y'] = position[1];
+        this['z'] = position[2];
         
         this.angle = 0;
         this.dist = startingDistance;
@@ -718,6 +718,178 @@ canvas {
     
     }
     );
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+// SCENE GRAPH    
+    
+    
+    // BASE OBJECT //////////////////////////////
+    var obj_base = {};
+    obj_base.aDefaultProperties = { 
+       position: [0.0, 0.0, 0.0] // world position
+    };
+    
+    
+    
+    
+    // QUAD OBJECT /////////////////////////////
+     function obj_quad(aProperties)
+     {
+      // get defaults from base object, overwrite with arguments
+      for(var k in obj_base.aDefaultProperties){ this[k] = obj_base.aDefaultProperties[k]; }  
+      for(var k in aProperties){ this[k] = aProperties[k]; }   
+      
+      this.aVertexPositions = 
+        [-1.0, -1.0, 0.0,
+          1.0, -1.0, 0.0,
+         -1.0,  1.0, 0.0,
+         
+         -1.0,  1.0, 0.0,
+          1.0, -1.0, 0.0,
+          1.0,  1.0, 0.0
+         ]; 
+         
+      this.iTriangleCount = this.aVertexPositions.length / 9;
+   
+      this.aTextureCoords = 
+         [0.0, 0.0,
+          1.0, 0.0,
+          0.0, 1.0,
+          
+          0.0, 1.0,
+          1.0, 0.0,
+          1.0, 1.0
+        ]; 
+     }
+     
+     obj_quad.prototype.getVertexPositions = function() // applies world position to local vertex positions
+     {
+      var aReturnVertexArray = [];
+      var a = this.aVertexPositions;
+      var p = this.position;
+      for(var i = 0; i < this.iTriangleCount;  i++){
+        aReturnVertexArray = aReturnVertexArray.concat( 
+          [ a[(i*9)]   + p[0], a[(i*9)+1] + p[1], a[(i*9)+2] + p[2] ] // vertex 1
+         ,[ a[(i*9)+3] + p[0], a[(i*9)+4] + p[1], a[(i*9)+5] + p[2] ] // vertex 2
+         ,[ a[(i*9)+6] + p[0], a[(i*9)+7] + p[1], a[(i*9)+8] + p[2] ] // vertex 3
+                                 
+        );
+      }
+      return aReturnVertexArray;
+     };
+     
+     obj_quad.prototype.getTextureCoords = function(){ return this.aTextureCoords; };
+      
+      
+      
+      
+    // SCENE GRAPH /////////////////////////////
+    
+    // NODE oooo
+    function sceneNode(geometry){
+      this.iParentIndex = -1;
+      this.aChildrenIndices= [];
+      this.geometry = geometry;
+    }
+    
+    sceneNode.prototype.setParent = function(index){ 
+      var oldParent = this.iParentIndex; 
+      this.iParentIndex = index;
+      return oldParent;
+    };
+    
+    sceneNode.prototype.hasChildren = function(){ return this.aChildrenIndices.length > 0; };
+    
+    
+    
+    // GRAPH oooo
+    function sceneGraph(){
+      // vertex data
+      this.aVertexPositions = [];
+      this.aTextureCoords = [];
+      
+      // graph
+      this.graph = [];
+      
+      // create root node  
+      this.rootIndex = this.addChild(new sceneNode(null), null);
+    }
+    
+    sceneGraph.prototype.addChild = function(node, parentIndex)
+    {
+      var iNodeIndex = this.graph.push(node) - 1;
+      if(parentIndex != null){
+        node.setParent(parentIndex);
+        this.getNode(parentIndex).aChildrenIndices.push(iNodeIndex);
+      }else{}
+      return iNodeIndex;
+    };
+    
+    sceneGraph.prototype.getRoot = function(){ return this.getNode(this.rootIndex); };
+    sceneGraph.prototype.getNode = function(index){ return this.graph[index]; };
+    
+    sceneGraph.prototype.clearBuffers = function(){ this.aVertexPositions = []; this.aTextureCoords = []; };
+    
+    sceneGraph.prototype.rebuildBuffers = function(){
+      this.clearBuffers();
+      this.rebuildBuffersAtNode( this.getRoot() );
+    };
+    sceneGraph.prototype.rebuildBuffersAtNode = function(node) 
+    {      
+      
+      // PROCESS SELF
+      //  concat geometry and texture coords to list
+      
+      if(node.geometry != null){
+       this.aVertexPositions = this.aVertexPositions.concat(node.geometry.getVertexPositions());
+       this.aTextureCoords = this.aTextureCoords.concat(node.geometry.getTextureCoords());
+      }else{}
+      
+      // PROCESS CHILDREN
+      //  no children? do nothing, else rebuild foreach child 
+      if(!node.hasChildren()){ return; }
+      else{
+        var children = node.aChildrenIndices;
+        for(var i = 0; i<children.length; i++){
+          this.rebuildBuffersAtNode(this.getNode( children[i] ));
+        }      
+      }
+    };
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
 </script>
