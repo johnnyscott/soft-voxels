@@ -474,34 +474,23 @@ canvas {
     function initBuffers() {
         starVertexPositionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, starVertexPositionBuffer); // gives us a pointer into a store
-        vertices = [
-            -2.0, -2.0,  0.0,
-             2.0, -2.0,  0.0,
-            -2.0,  2.0,  0.0, // tri 1
-            
-            -2.0,  2.0,  0.0,
-             2.0, -2.0,  0.0,             
-             2.0,  2.0,  0.0 // tri 2
-        ];
+       
+        vertices = scene.aVertexPositions;
+        
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW); // actually allocates stoe and pushes data up
         starVertexPositionBuffer.itemSize = 3;
-        starVertexPositionBuffer.numItems = 6;
+        starVertexPositionBuffer.numItems = vertices.length / starVertexPositionBuffer.itemSize;
 
         starVertexTextureCoordBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, starVertexTextureCoordBuffer);
-        var textureCoords = [
-            0.0, 0.0,
-            1.0, 0.0,
-            0.0, 1.0,
-            
-            
-            0.0, 1.0,
-            1.0, 0.0,
-            1.0, 1.0
-        ];
+        
+        var textureCoords = scene.aTextureCoords;
+        
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
         starVertexTextureCoordBuffer.itemSize = 2;
-        starVertexTextureCoordBuffer.numItems = 6;
+        starVertexTextureCoordBuffer.numItems = textureCoords.length/starVertexTextureCoordBuffer.itemSize;
+        
+        return;
     }
 
 
@@ -565,11 +554,8 @@ canvas {
     // star constructor:   function Star(startingDistance, rotationSpeed) {
     function initWorldObjects() {
         scene = new sceneGraph();
-        
-       
-        var numStars = 1100;
-        console.log(new Date().getTime());
-        for (var i=0; i < numStars; i++) {
+        var numBushes = 8530;
+        for (var i=0; i < numBushes; i++) {
           scene.addChild(
             new sceneNode(
               new obj_quad({ position:
@@ -581,21 +567,7 @@ canvas {
             , 0);
         
         }
-        scene.rebuildBuffers();
-        
-        
-        
-        return;
-        var numStars = 1100;
-
-        for (var i=0; i < numStars; i++) {
-            stars.push(
-                new Star(   (i / numStars) * 5.0 
-                            ,i / numStars
-                            ,[ rndHN(103)
-                              ,rndHN(1.2) - 3
-                              ,rndHN(103)    ] )  );
-        }
+        scene.rebuildBuffers(); // generate nice arrays of vertices
     }
 
 
@@ -616,9 +588,25 @@ canvas {
         mat4.rotate(mvMatrix, degToRad(oMouse.angleX), [0.0, 1.0, 0.0]);
         mat4.translate(mvMatrix, [pX, pY, pZ]);
 
-        for (var i in stars) {
-            stars[i].draw();         
-        }
+        mvPushMatrix();
+
+        // Move to the star's positionw  
+       // mat4.translate(mvMatrix, [0, 0, 0]);
+
+        // Draw the star in its main color
+        gl.bindTexture(gl.TEXTURE_2D, starTexture);
+        gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, starVertexTextureCoordBuffer);
+        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, starVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, starVertexPositionBuffer);
+        gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, starVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+        setMatrixUniforms();
+        gl.drawArrays(gl.TRIANGLES, 0, starVertexPositionBuffer.numItems);
+
+        mvPopMatrix();
 
     }
 
@@ -678,7 +666,6 @@ canvas {
         initGL(canvas);
         initShaders();
         initWorldObjects();
-        return ;
         initBuffers();
         initTexture();
         
