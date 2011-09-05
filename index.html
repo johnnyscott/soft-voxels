@@ -554,14 +554,14 @@ canvas {
     // star constructor:   function Star(startingDistance, rotationSpeed) {
     function initWorldObjects() {
         scene = new sceneGraph();
-        var numBushes = 8530;
+        var numBushes = 38530;
         for (var i=0; i < numBushes; i++) {
           scene.addChild(
             new sceneNode(
               new obj_quad({ position:
-                              [rndHN(103)
-                              ,rndHN(1.2) - 3
-                              ,rndHN(103)]
+                              [rndHN(133)
+                              ,rndHN(1.1)
+                              ,rndHN(203)]
                             })
             )
             , 0);
@@ -577,7 +577,7 @@ canvas {
     function drawScene() {
         // is this needed? I commented it out and behavior is the same ??
         //gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-        
+       
         gl.clear(gl.COLOR_BUFFER_BIT );
 
         // THIS IS DONE IN INIT NOW since it need only be done once
