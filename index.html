@@ -567,7 +567,10 @@ canvas {
             , 0);
         
         }
+       var i = new Date().getTime();
         scene.rebuildBuffers(); // generate nice arrays of vertices
+        // array concat is slow as fuck that's the problem traversing only takes like 4 ms
+          console.log(new Date().getTime() - i);
     }
 
 
@@ -866,8 +869,19 @@ canvas {
       //  concat geometry and texture coords to list
       
       if(node.geometry != null){
-       this.aVertexPositions = this.aVertexPositions.concat(node.geometry.getVertexPositions());
-       this.aTextureCoords = this.aTextureCoords.concat(node.geometry.getTextureCoords());
+     //  this.aVertexPositions = this.aVertexPositions.concat(node.geometry.getVertexPositions());
+     //  this.aTextureCoords = this.aTextureCoords.concat(node.geometry.getTextureCoords());
+       
+       var aPos = node.geometry.getVertexPositions();
+       var aPosL = aPos.length;
+       var aTex = node.geometry.getTextureCoords();
+       var aTexL = aTex.length;
+       for(var i = 0; i< aPosL; i++){
+        this.aVertexPositions.push(aPos[i]);
+       }
+       for(var i = 0; i< aTexL; i++){
+        this.aTextureCoords.push(aTex[i]);
+       }
       }else{}
       
       // PROCESS CHILDREN
