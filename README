@@ -6,9 +6,12 @@ ChangeLog
   * added a flying camera and WASD control for run/strafe plus mouse look control
   IMMEDIATE TO DOS
   [ ] IMPORT GEOMETRY get a textured ground plane from blender
-      [ ] add simple loading/status message
-      [ ] implement sceneGraph->rebuildBuffers as a web worker
-      [ ] install gimp/blender 
+      [X] get rid of duplicate vertices, figure out indexes
+      THE BELOW WERE ELIMINATED SINCE WE DO push instead of concat for scene.rebuildBuffers()
+      [X] add simple loading/status message
+      [X] implement sceneGraph->rebuildBuffers as a web worker
+      THE BELOW WAS ELIMINATED SINCE 3dsMAX LOOKS LIKE ITLL EXPORT FINE
+      [X] install gimp/blender 
       [ ] create a fancy textured ground plane in blender, bake some lighting into the texture
       [ ] setup/test this json export script->https://github.com/alteredq/three.js/blob/master/utils/exporters/convert_obj_three.py      
       [ ] load the model, hook up status
