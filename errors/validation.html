@@ -19,7 +19,7 @@
   var _iAddedInErrorCount = 0;
   var _simulateLoadTimeVarying = 1000;
   var _simulateLoadTimeMin = 300;
-  
+  var bHoverCancel = false;
   var aRandomErrors = [
     'It was the best of times it was the worst of times',
     ,'Whether it is nobler to endure the slings and arrows of outrageous fortune'
@@ -67,6 +67,8 @@
        $(sSubmitSelector).html(sNormalMessage);
       _clearErrors();
     }
+    
+    bHoverCancel = false;
   }
 
   function shuffleButtonClickListener(e){
@@ -75,6 +77,7 @@
     sSubmitSelectorParent = $(e).parent();
     $(sSubmitSelectorParent).html('<img src="loading.gif" class="loading" /> Please wait . . .');
     
+    bHoverCancel = true;
     setTimeout(
      '_simulateLoadReturn()'
     , _simulateLoadTimeMin + Math.round(_simulateLoadTimeVarying * Math.random())
@@ -95,6 +98,8 @@
   
   
   function tooltipHover(){
+    if(bHoverCancel){return;}else{}
+  
     var toolTip = $(this).find('.tooltip-error-msg');
    
      $(toolTip).css({});
