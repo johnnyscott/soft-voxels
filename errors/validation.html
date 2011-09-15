@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
+<script>
+
+
+
+  var sSubmitMarkupOriginal = '';
+  var sSubmitSelector = '#shuffle-button';
+  var sTooltipErrorClass = 'tooltip-error';
+  var sSubmitSelectorParent = null;
+  var iTooltipWedgeIn = 24;
+  var iTooltipAnimateShift = 30;
+  var sErrorTargetSelector = 'fieldset';
+  var sErrorMessage = 'Errors Occured. Please check errors above';
+  var sNormalMessage = '';
+  var fErrorProbability = .4;
+  var _iAddedInErrorCount = 0;
+  var _simulateLoadTimeVarying = 1000;
+  var _simulateLoadTimeMin = 300;
+  
+  var aRandomErrors = [
+    'It was the best of times it was the worst of times',
+    ,'Whether it is nobler to endure the slings and arrows of outrageous fortune'
+    ,'Fourscore and eleventeen fortnights ago'
+    ,'I am not a crook...but I do have a crooked nose. This field has some issue unrelated to nixon.'
+    ,'There is nothing to fear but fear itself. Maybe you should check the data in this field?'
+    ,'Believe it and you can achieve it! Follow your heart and trust your feelings luke. Use the force.'
+    ,'In a hole in the ground there lived a hobbit.Not a nasty, dirty, wet hole, filled with the ends of worms and an oozy smel'
+  ];
+  function rnd(from, to){
+       return Math.floor(Math.random() * (to - from + 1) + from);
+    }
+  function _getRandomError(){ return aRandomErrors[rnd(0,aRandomErrors.length-1)];}
+  function _clearErrors(){
+    $(sErrorTargetSelector).removeClass(sTooltipErrorClass);
+    unbindTooltipEvents();
+  }
+  
+  function _decorateErrors(){
+    $(sErrorTargetSelector).removeClass(sTooltipErrorClass);
+    
+    while(_iAddedInErrorCount == 0){
+    $.each($(sErrorTargetSelector),function(k,v){
+      var e = $(v);
+      if(Math.random() > .6){ $(e).addClass(sTooltipErrorClass); $(e).find('div.tooltip-error-msg span').html(_getRandomError()); _iAddedInErrorCount++;}else{}
+    });
+    }
+    _iAddedInErrorCount = 0;
+    unbindTooltipEvents();
+    assignTooltipEventsToErrorfields(sErrorTargetSelector);
+  }
+  
+  function _addToolTipsTo(sSelector){
+    $(sSelector).append('<div class="tooltip-error-msg"><span></span></div>');
+  }
+  
+  function _simulateLoadReturn(){
+    $(sSubmitSelectorParent).html(sSubmitMarkupOriginal);
+    if(Math.random() > fErrorProbability){
+      $(sSubmitSelector).addClass(sTooltipErrorClass);
+       $(sSubmitSelector).html(sErrorMessage);
+      _decorateErrors();
+    }else{
+      $(sSubmitSelector).removeClass(sTooltipErrorClass);
+       $(sSubmitSelector).html(sNormalMessage);
+      _clearErrors();
+    }
+  }
+
+  function shuffleButtonClickListener(e){
+    if(sNormalMessage  ==''){sNormalMessage= $(e).html();}else{} // save on first click
+    sSubmitMarkupOriginal = $(e).parent().html();
+    sSubmitSelectorParent = $(e).parent();
+    $(sSubmitSelectorParent).html('<img src="loading.gif" class="loading" /> Please wait . . .');
+    
+    setTimeout(
+     '_simulateLoadReturn()'
+    , _simulateLoadTimeMin + Math.round(_simulateLoadTimeVarying * Math.random())
+    
+    );
+  
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  function tooltipHover(){
+    var toolTip = $(this).find('.tooltip-error-msg');
+   
+     $(toolTip).css({});
+    $(toolTip).css({
+      opacity:0.0,
+      left: ($(this).offset().left + ($(this).outerWidth()/2) - ($(toolTip).width()/2)) +'px',
+      top: (($(this).offset().top - $(toolTip).height()) + iTooltipWedgeIn + iTooltipAnimateShift) +'px'
+    });
+   
+   
+    $(toolTip).animate(
+      { opacity: .99 , top:'-='+iTooltipAnimateShift+'px'}
+      ,180
+      ,'swing'
+      ,function(){}
+    );
+  }
+  
+  
+  
+  function tooltipLeave(){
+    var toolTip = $(this).find('.tooltip-error-msg');
+    
+     $(toolTip).animate(
+      { opacity: 0.0 , top:'+='+(iTooltipAnimateShift*2)+'px'}
+      ,210
+      ,'swing'
+      ,function(){
+      $(this).css({
+      left: -400+'px'
+    });
+      
+      }
+    );
+    
+    
+  }
+  
+  function unbindTooltipEvents(){
+    $(sErrorTargetSelector).unbind('mouseenter mouseleave')
+  }
+  function assignTooltipEventsToErrorfields(selector){
+    
+      $(selector+'.' +sTooltipErrorClass).hover(tooltipHover, tooltipLeave);
+  
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  $(document).ready(
+    function(){
+      _addToolTipsTo(sErrorTargetSelector);
+      
+    }
+  );
+</script>
+<link href='http://fonts.googleapis.com/css?family=Questrial' rel='stylesheet' type='text/css'>
+<style>
+  h1{ font-size:1.5em;  }
+  form{ padding: 20px 30px 20px 50px; width:520px;}
+  html,body{ margin:0px; padding:10px 20px; padding-top:30px;background-color:#2a211c; color:#bdae9d; font-family: 'Questrial', sans-serif; font-size:1.00em;}
+  fieldset{border-radius:11px;  margin-bottom:12px; border:none;   }
+  fieldset legend{ position:relative; left:-19px; font-style:italic;color:white;}
+
+  textarea{height:100px; width: 290px;}
+  
+  a#shuffle-button{display:inline; text-decoration:none; color:white; background:#513a2d; border-radius:19px;padding:11px;padding-bottom:13px; border:1px outset #907464;}
+  a#shuffle-button:hover{background:#5f4130;border:1px outset #b1917f;}
+  a#shuffle-button.tooltip-error{ background:#ab0c0c;}
+  #submit-container{ margin-top:50px;}
+  
+  img.loading{ vertical-align:middle;margin-right:9px;width:29px; height:29px; }
+  
+  
+  fieldset.tooltip-error{ background:#ab0c0c;}
+  
+  .tooltip-error-msg{ position:absolute;left:-400px;width:209px;height:122px; background:url(tooltip-top.png) no-repeat;}
+  .tooltip-error-msg span{ display:block; color:black; font-size:14px; line-height:20px;position:relative;top:15px;left:15px;width:175px;height:78px;overflow:hidden;}
+</style>
+
+</head>
+<body>
+  <h1>Tooltip Error Messages</h1>
+  <form>
+    <fieldset data-errorfield="type-here">
+      <legend>Text Input</legend>
+      <label>Type here</label><br/>
+      <input type="text" name="type-here" />
+    </fieldset>
+    
+    <fieldset data-errorfield="select-one" >
+      <legend>Drop Downs</legend>
+      <label>Which?</label>
+      <select name="select-one"><option>Select One...</option><option>First</option><option>Second</option><option>Third</option></select>
+    </fieldset>
+    
+    <fieldset data-errorfield="radio-error">
+      <legend>Radio Group</legend>
+      <label for="color-red">Red</label>
+      <input id="color-red" type="radio" name="radio-error"/>
+      
+      <label for="color-blue">Blue</label>
+      <input id="color-blue" type="radio" name="radio-error" />
+      
+      <label for="color-green">Green</label>
+      <input id="color-green" type="radio" name="radio-error" />
+      
+      <label for="color-alpha">Alpha</label>
+      <input id="color-alpha" type="radio" name="radio-error" />
+    </fieldset>
+    <fieldset data-errorfield="check-me">
+      <legend>Checkbox</legend>
+      <label>Check Me</label>
+      <input type="checkbox" name="check-me"/>
+    </fieldset>
+     <fieldset data-errorfield="type-something">
+      <legend>Textarea</legend>
+      <label>Type something</label><br/>
+      <textarea name="type-something"></textarea>      
+    </fieldset>
+    
+    <div id="submit-container"><a href="javascript:void(0)" class="" onClick="shuffleButtonClickListener(this);" id="shuffle-button">Shuffle Errors</a></div>
+   </form>
+   
+  
+</body>
+</html>
