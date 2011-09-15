@@ -112,9 +112,10 @@
    
     $(toolTip).animate(
       { opacity: .99 , top:'-='+iTooltipAnimateShift+'px'}
-      ,180
-      ,'swing'
-      ,function(){}
+      ,{duration:140
+      ,easing:'swing'
+      ,queue:false
+      ,complete:function(){}}
     );
   }
   
@@ -124,15 +125,16 @@
     var toolTip = $(this).find('.tooltip-error-msg');
     
      $(toolTip).animate(
-      { opacity: 0.0 , top:'+='+(iTooltipAnimateShift*2)+'px'}
-      ,210
-      ,'swing'
-      ,function(){
+      { opacity: 0.0 , top:'+='+(iTooltipAnimateShift)+'px'}
+      ,{duration:70
+      ,easing:'swing'
+      ,queue:false
+      ,complete:function(){
       $(this).css({
       left: -400+'px'
     });
       
-      }
+      }}
     );
     
     
